@@ -30,3 +30,32 @@ print(test_response.content[0].text)
 print(
     f"\n✓ Token usage: {test_response.usage.input_tokens} in, {test_response.usage.output_tokens} out"
 )
+
+# List all available Anthropic skills
+# Note: Skills API requires the skills beta header
+client_with_skills_beta = Anthropic(
+    api_key=API_KEY, default_headers={"anthropic-beta": "skills-2025-10-02"}
+)
+
+skills_response = client_with_skills_beta.beta.skills.list(source="anthropic")
+
+print("Available Anthropic-Managed Skills:")
+print("=" * 80)
+
+for skill in skills_response.data:
+    print(f"\n📦 Skill ID: {skill.id}")
+    print(f"   Title: {skill.display_title}")
+    print(f"   Latest Version: {skill.latest_version}")
+    print(f"   Created: {skill.created_at}")
+
+    # Get version details
+    try:
+        version_info = client_with_skills_beta.beta.skills.versions.retrieve(
+            skill_id=skill.id, version=skill.latest_version
+        )
+        print(f"   Name: {version_info.name}")
+        print(f"   Description: {version_info.description}")
+    except Exception as e:
+        print(f"   (Unable to fetch version details: {e})")
+
+print(f"\n\n✓ Found {len(skills_response.data)} Anthropic-managed skills")
