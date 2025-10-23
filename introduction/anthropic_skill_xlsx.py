@@ -22,7 +22,7 @@ OUTPUT_DIR.mkdir(exist_ok=True)
 #Skills require the **code execution** tool to be enabled. Here's the typical workflow:
 # Use client.beta.messages.create() for Skills support
 response = client.beta.messages.create(
-    model="claude-sonnet-4-5-20250929",
+    model=MODEL,
     max_tokens=4096,
     container={
         "skills": [
