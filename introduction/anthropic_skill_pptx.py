@@ -4,9 +4,7 @@ from anthropic import Anthropic
 from anthropic_client_init import client
 from file_utils import (
     download_all_files,
-    download_file,
     extract_file_ids,
-    get_file_info,
     print_download_summary,
 )
 
