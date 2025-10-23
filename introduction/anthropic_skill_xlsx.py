@@ -1,11 +1,7 @@
 import os
-import sys
-import json
 from pathlib import Path
 from anthropic import Anthropic
-from dotenv import load_dotenv
-
-# Import our file utilities
+from anthropic_client_init import client
 from file_utils import (
     download_all_files,
     download_file,
@@ -14,45 +10,13 @@ from file_utils import (
     print_download_summary,
 )
 
-# Load environment variables from parent directory
-load_dotenv()
-
+# Get configuration from environment
 API_KEY = os.getenv("ANTHROPIC_API_KEY")
 MODEL = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-5-20250929")
-
-if not API_KEY:
-    raise ValueError("ANTHROPIC_API_KEY not found.")
-
-# Initialize client
-# Note: We'll add beta headers per-request when using Skills
-client = Anthropic(api_key=API_KEY)
 
 # Create outputs directory if it doesn't exist
 OUTPUT_DIR = Path.cwd().parent / "outputs"
 OUTPUT_DIR.mkdir(exist_ok=True)
-
-print("✓ API key loaded")
-print(f"✓ Using model: {MODEL}")
-print(f"✓ Output directory: {OUTPUT_DIR}")
-print("\n📝 Note: Beta headers will be added per-request when using Skills")
-
-# Simple test to verify API connection
-test_response = client.messages.create(
-    model=MODEL,
-    max_tokens=100,
-    messages=[
-        {
-            "role": "user",
-            "content": "Say 'Connection successful!' if you can read this.",
-        }
-    ],
-)
-
-print("API Test Response:")
-print(test_response.content[0].text)
-print(
-    f"\n✓ Token usage: {test_response.usage.input_tokens} in, {test_response.usage.output_tokens} out"
-)
 
 ### How Skills Work with Code Execution
 #Skills require the **code execution** tool to be enabled. Here's the typical workflow:
